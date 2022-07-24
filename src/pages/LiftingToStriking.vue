@@ -8,7 +8,7 @@
       </div>
 
       <div class="q-pa-md">
-        <div class="q-gutter-md" style="max-width: 300px">
+        <div class="q-gutter-md" style="min-width: 300px; max-width: 300px">
           <q-input outlined v-model="gravity" label="Gravity (m/s^2)" />
         </div>
       </div>
@@ -19,15 +19,16 @@
         </div>
       </div>
 
-      <div class="q-pa-md q-gutter-sm">
-        <q-btn type="submit" color="primary" label="Calculate" />
+      <div class="q-pa-md q-gutter-sm column">
+        <q-btn type="submit" color="primary" label="Calculate" align="center" />
       </div>
     </form>
   </div>
 
-  <div id="results">
+  <div id="results" class="text-center">
     <p><b>Joules:</b> {{ joulesDisplay }}</p>
     <p><b>Attack Potency:</b> {{ attackPotency }} level</p>
+    <p>Formula: AP = (m * g * h) / 5</p>
   </div>
 </template>
 
