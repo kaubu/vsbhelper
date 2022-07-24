@@ -6,6 +6,10 @@ const routes: RouteRecordRaw[] = [
     component: () => import('layouts/MainLayout.vue'),
     children: [
       { path: '', component: () => import('src/pages/IndexPage.vue') },
+      {
+        path: 'lifting-to-striking',
+        component: () => import('src/pages/LiftingToStriking.vue'),
+      },
     ],
   },
 
