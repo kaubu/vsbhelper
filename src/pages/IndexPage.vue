@@ -1,13 +1,15 @@
 <template>
-  <p>Welcome!</p>
+  <div class="relative absolute-center">
+    <p>Welcome!</p>
+  </div>
 </template>
 
 <script lang="ts">
-import { ref, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
 
 export default defineComponent({
   setup() {
-    const test = ref();
+    // const test = ref();
 
     return {};
   },

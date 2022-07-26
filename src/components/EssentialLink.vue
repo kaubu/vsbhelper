@@ -7,7 +7,10 @@
 
       <q-item-section>
         <q-item-label>{{ title }}</q-item-label>
-        <q-item-label caption>{{ caption }}</q-item-label>
+        <div v-if="caption != ''">
+          <!-- Don't render if there's no caption -->
+          <q-item-label caption>{{ caption }}</q-item-label>
+        </div>
       </q-item-section>
     </q-item>
   </div>

@@ -10,6 +10,10 @@ const routes: RouteRecordRaw[] = [
         path: 'lifting-to-striking',
         component: () => import('src/pages/LiftingToStriking.vue'),
       },
+      {
+        path: 'joules-to-tons-of-tnt',
+        component: () => import('src/pages/JoulesToTNT.vue'),
+      },
     ],
   },
 

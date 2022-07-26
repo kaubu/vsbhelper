@@ -29,7 +29,8 @@
       </q-list>
     </q-drawer>
 
-    <q-page-container class="relative-position absolute-center">
+    <q-page-container class="">
+      <!-- relative-position absolute-center -->
       <router-view />
     </q-page-container>
   </q-layout>
@@ -52,6 +53,15 @@ const linksList = [
   },
   {
     title: 'Conversions',
+    separator: true,
+  },
+  {
+    title: 'Joules to Tons of TNT',
+    icon: 'lightbulb',
+    link: '#/joules-to-tons-of-tnt',
+  },
+  {
+    title: 'Calculations',
     separator: true,
   },
   {

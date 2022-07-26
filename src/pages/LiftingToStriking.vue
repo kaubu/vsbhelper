@@ -1,56 +1,58 @@
 <template>
-  <div id="calculations" class="q-pa-md relative-position">
-    <form @submit.prevent="displayAttackPotency">
-      <div class="q-pa-md">
-        <div class="q-gutter-md" style="max-width: 300px">
-          <q-input outlined clearable v-model="mass" label="Mass (kg)" />
+  <div class="q-gutter-md row-12 no-wrap" style="height: 100%">
+    <div id="calculations" class="q-pa-md col-6">
+      <form @submit.prevent="displayAttackPotency">
+        <div class="q-pa-md row justify-center items-center">
+          <div class="q-gutter-md" style="min-width: 300px; max-width: 300px">
+            <q-input outlined clearable v-model="mass" label="Mass (kg)" />
+          </div>
         </div>
-      </div>
 
-      <div class="q-pa-md">
-        <div class="q-gutter-md" style="min-width: 300px; max-width: 300px">
-          <q-input outlined v-model="gravity" label="Gravity (m/s^2)" />
+        <div class="q-pa-md row justify-center items-center">
+          <div class="q-gutter-md" style="min-width: 300px; max-width: 300px">
+            <q-input outlined v-model="gravity" label="Gravity (m/s^2)" />
+          </div>
         </div>
-      </div>
 
-      <div class="q-pa-md">
-        <div class="q-gutter-md" style="max-width: 300px">
-          <q-input outlined v-model="height" label="Height (m)" />
+        <div class="q-pa-md row justify-center items-center">
+          <div class="q-gutter-md" style="min-width: 300px; max-width: 300px">
+            <q-input outlined v-model="height" label="Height (m)" />
+          </div>
         </div>
-      </div>
 
-      <div class="q-pa-md q-gutter-sm column">
-        <q-btn type="submit" color="primary" label="Calculate" align="center" />
-      </div>
-    </form>
-  </div>
+        <div class="q-pa-md q-gutter-sm row justify-center items-center">
+          <q-btn
+            type="submit"
+            color="primary"
+            label="Calculate"
+            align="center"
+          />
+        </div>
+      </form>
+    </div>
 
-  <div id="results" class="text-center">
-    <p><b>Joules:</b> {{ joulesDisplay }}</p>
-    <p><b>Attack Potency:</b> {{ attackPotency }} level</p>
-    <p>Formula: AP = (m * g * h) / 5</p>
+    <div id="results" class="text-center col-6">
+      <p><b>Attack Potency:</b> {{ attackPotency }} level</p>
+      <!-- <br /><q-separator inset /><br /> -->
+      <p><b>Joules:</b> {{ joulesDisplay }} J</p>
+      <p><b>Kilojoules:</b> {{ kilojoulesDisplay }} kJ</p>
+      <p><b>Megajoules:</b> {{ megajoulesDisplay }} MJ</p>
+      <!-- <br /><q-separator inset /><br /> -->
+      <p><b>Tons of TNT:</b> {{ tonsDisplay }} T</p>
+      <p><b>Kilotons of TNT:</b> {{ kilotonsDisplay }} KT</p>
+      <p><b>Megatons of TNT:</b> {{ megatonsDisplay }} MT</p>
+      <p><b>Gigatons of TNT:</b> {{ gigatonsDisplay }} GT</p>
+      <p><b>Teratons of TNT:</b> {{ teratonsDisplay }} TT</p>
+      <p><b>Petatons of TNT:</b> {{ petatonsDisplay }} PT</p>
+      <p>Formula: AP = (m * g * h) / 5</p>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 import { ref, defineComponent } from 'vue';
-
-function convertJoulesToKilojoules(joules: number) {
-  return joules / 1000;
-}
-
-function convertKilojoulesToMegajoules(kilojoules: number) {
-  return kilojoules / 1000;
-}
-
-function convertMegajoulesToTonsOfTNT(megajoules: number) {
-  return megajoules / 4184;
-}
-
-function convertTonsHigher(tons: number) {
-  // Ton -> Kilo -> Mega, etc
-  return tons / 1000;
-}
+import { metricUpgrade, megajoulesToTNT } from '../components/conversion';
+import { getEnergyFromJoules } from '../components/models';
 
 function getAttackPotencyFromJoules(joules: number) {
   if (joules == NaN) {
@@ -65,7 +67,7 @@ function getAttackPotencyFromJoules(joules: number) {
     return 'Athelete';
   }
 
-  let kilojoules = convertJoulesToKilojoules(joules);
+  let kilojoules = metricUpgrade(joules);
 
   if (kilojoules > 0.3 && kilojoules <= 15) {
     return 'Street';
@@ -73,8 +75,8 @@ function getAttackPotencyFromJoules(joules: number) {
     return 'Wall';
   }
 
-  let megajoules = convertKilojoulesToMegajoules(kilojoules);
-  let tons = convertMegajoulesToTonsOfTNT(megajoules);
+  let megajoules = metricUpgrade(kilojoules);
+  let tons = megajoulesToTNT(megajoules);
 
   if (tons > 0.005 && tons <= 0.25) {
     return 'Small Building';
@@ -88,7 +90,7 @@ function getAttackPotencyFromJoules(joules: number) {
     return 'Multi-City Block';
   }
 
-  let kilotons = convertTonsHigher(tons);
+  let kilotons = metricUpgrade(tons);
 
   if (kilotons > 1 && kilotons <= 5.8) {
     return 'Small Town';
@@ -98,7 +100,7 @@ function getAttackPotencyFromJoules(joules: number) {
     return 'Large Town';
   }
 
-  let megatons = convertTonsHigher(kilotons);
+  let megatons = metricUpgrade(kilotons);
 
   if (megatons > 1 && megatons <= 6.3) {
     return 'Small City';
@@ -108,7 +110,7 @@ function getAttackPotencyFromJoules(joules: number) {
     return 'Mountain';
   }
 
-  let gigatons = convertTonsHigher(megatons);
+  let gigatons = metricUpgrade(megatons);
 
   if (gigatons > 1 && gigatons <= 4.3) {
     return 'Large Mountain';
@@ -124,18 +126,42 @@ export default defineComponent({
     let mass = ref();
     let gravity = ref(9.80665);
     let height = ref(1.6845);
+
     let attackPotency = ref('Unknown');
-    let joulesDisplay = ref(0);
+
+    let joulesDisplay = ref('');
+    let kilojoulesDisplay = ref('');
+    let megajoulesDisplay = ref('');
+
+    let tonsDisplay = ref('');
+    let kilotonsDisplay = ref('');
+    let megatonsDisplay = ref('');
+    let gigatonsDisplay = ref('');
+    let teratonsDisplay = ref('');
+    let petatonsDisplay = ref('');
 
     function calculateJoules() {
       let joules = (mass.value * gravity.value * height.value) / 5;
-      console.log(`Joules: ${joules}`);
+      // console.log(`Joules: ${joules}`);
       return joules;
     }
 
     function displayAttackPotency() {
-      let joules = calculateJoules();
-      joulesDisplay.value = joules;
+      const joules = calculateJoules();
+
+      const energyValues = getEnergyFromJoules(joules);
+
+      joulesDisplay.value = joules.toFixed(2);
+      kilojoulesDisplay.value = energyValues.kilojoules.toFixed(2);
+      megajoulesDisplay.value = energyValues.megajoules.toFixed(2);
+
+      tonsDisplay.value = energyValues.tons.toFixed(2);
+      kilotonsDisplay.value = energyValues.kilotons.toFixed(2);
+      megatonsDisplay.value = energyValues.megatons.toFixed(2);
+      gigatonsDisplay.value = energyValues.gigatons.toFixed(2);
+      teratonsDisplay.value = energyValues.teratons.toFixed(2);
+      petatonsDisplay.value = energyValues.petatons.toFixed(2);
+
       attackPotency.value = getAttackPotencyFromJoules(joules);
     }
 
@@ -146,6 +172,14 @@ export default defineComponent({
       attackPotency,
       displayAttackPotency,
       joulesDisplay,
+      kilojoulesDisplay,
+      megajoulesDisplay,
+      tonsDisplay,
+      kilotonsDisplay,
+      megatonsDisplay,
+      gigatonsDisplay,
+      teratonsDisplay,
+      petatonsDisplay,
     };
   },
 });
